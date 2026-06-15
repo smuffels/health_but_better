@@ -9,7 +9,7 @@ struct HeartRateView: View {
 
     var body: some View {
         List(vm.samples) { sample in
-            Text("\(sample.bpm) bpm – \(sample.date_time.formatted())")
+            Text("\(sample.bpm) bpm – \(sample.date_time.formatted())- \(sample.category)")
         }
         .task { await vm.load() }
     }
