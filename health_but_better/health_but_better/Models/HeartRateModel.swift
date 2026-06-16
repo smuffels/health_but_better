@@ -19,3 +19,7 @@ enum HeartRateCategory: Int{
     case noData = 3
 }
 
+enum ComparisonOperator{
+    case greaterEqual
+    case lessEqual
+}

@@ -35,6 +35,13 @@ class HealthService {
             }
 
             return finalResult
+            /*return [
+                HeartRateSample(id: UUID(), date_time: .now, bpm: 99, category: HeartRateCategory.active),
+                HeartRateSample(id: UUID(), date_time: .now, bpm: 110, category: HeartRateCategory.active),
+                HeartRateSample(id: UUID(), date_time: .now, bpm: 70, category: HeartRateCategory.sedentary),
+                HeartRateSample(id: UUID(), date_time: .now, bpm: 100, category: HeartRateCategory.sedentary),
+                HeartRateSample(id: UUID(), date_time: .now, bpm: 91, category: HeartRateCategory.sedentary)
+            ]*/
         
         }
         else{
