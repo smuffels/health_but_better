@@ -9,8 +9,8 @@ struct HeartRateView: View {
     @State private var showDatePicker = false
     
     
-
-   
+    
+    
     
     var body: some View {
         VStack{
@@ -41,70 +41,36 @@ struct HeartRateView: View {
                         Text("Aktiv").tag(HeartRateCategory.active)
                         Text("Weiss nonig").tag(HeartRateCategory.notSet)
                         Text("Keine Kategorie").tag(HeartRateCategory.noData)
-                    }
+                    }.myPickerStyle()
                     // List left
-                    List(vm.filteredSamples){sample in
-                        HStack{
-                            Text(sample.date_time.formatted(
-                                date: .omitted,
-                                time: .shortened
-                            ))
-                            Spacer()
-                            Text("\(sample.bpm) bpm")
-                            
-                            // just for checking if filters are correct
-                            //Spacer()
-                            //Text("\(sample.category)")
-                        }
-            
-                    }.task { await vm.load()
-                }
-            }.frame(maxWidth: .infinity, maxHeight: .infinity)
-            
-            // Rechts
+                    ListView(samples: vm.filteredSamples, vm: vm)
+                }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+                // Rechts
                 VStack(alignment: .leading){
                     
-                        // Picker right
-                        Picker("Category", selection: $vm.selectedCategoryBPM){
-                            Text("Ruhezustand").tag(HeartRateCategory.sedentary)
-                            Text("Aktiv").tag(HeartRateCategory.active)
-                            Text("Weiss nonig").tag(HeartRateCategory.notSet)
-                            Text("Keine Kategorie").tag(HeartRateCategory.noData)
-                        }
+                    // Picker right
+                    Picker("Category", selection: $vm.selectedCategoryBPM){
+                        Text("Ruhezustand").tag(HeartRateCategory.sedentary)
+                        Text("Aktiv").tag(HeartRateCategory.active)
+                        Text("Weiss nonig").tag(HeartRateCategory.notSet)
+                        Text("Keine Kategorie").tag(HeartRateCategory.noData)
+                    }.myPickerStyle()
                     HStack{
                         Picker("operator", selection: $vm.selectedOperator){
                             Text(">=").tag(ComparisonOperator.greaterEqual)
                             Text("<=").tag(ComparisonOperator.lessEqual)
-
-                        }
+                            
+                        }.myPickerStyle()
                         Picker("BPM", selection: $vm.selectedBPM){
                             Text("110").tag(110)
                             Text("100").tag(100)
                             Text("90").tag(90)
                             Text("80").tag(80)
-                        }
+                        }.myPickerStyle()
                     }
-                        
-                    
-                   
-                    
-                    
-                    // List right
-                    List(vm.filteredSamplesBPM){sample in
-                        HStack{
-                            Text(sample.date_time.formatted(
-                                date: .omitted,
-                                time: .shortened
-                            ))
-                            Spacer()
-                            Text("\(sample.bpm) bpm")
-                            
-                            // just for checking if filters are correct
-                            Spacer()
-                            Text("\(sample.category)")
-                        }
-                        
-                    }.task { await vm.load()}
+                    //List right
+                    ListView(samples: vm.filteredSamplesBPM, vm: vm)
                 }.frame(maxWidth: .infinity, maxHeight: .infinity)
                 
                 
@@ -112,6 +78,36 @@ struct HeartRateView: View {
                 
             }
         }.frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    struct ListView:View {
+        var samples:[HeartRateSample]
+        var vm:HeartRateViewModel
+        var body: some View {
+            List(samples){sample in
+                HStack{
+                    Text(sample.date_time.formatted(
+                        date: .omitted,
+                        time: .shortened
+                    ))
+                    Spacer()
+                    Text("\(sample.bpm) bpm")
+                    
+                    // just for checking if filters are correct
+                    //Spacer()
+                    //Text("\(sample.category)")
+                }
+                
+            }.task { await vm.load()
+            }
+        }
+    }
+}
+
+extension View{
+    func myPickerStyle() -> some View {
+        self.pickerStyle(.menu)
+            .tint(Color("pickerFont"))
     }
 }
 
