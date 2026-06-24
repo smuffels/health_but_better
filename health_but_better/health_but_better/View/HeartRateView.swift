@@ -9,13 +9,10 @@ struct HeartRateView: View {
     @State private var showDatePicker = false
     
     
-    
-    
-    
     var body: some View {
         VStack{
             //Date and Date picker
-            Text(vm.selectedDate.formatted(date: .long, time: .omitted))
+            Text(vm.selectedDate.formatted(date: .long, time: .omitted)).foregroundStyle(Color("textColor"))
                 .padding()
                 .onTapGesture {
                     showDatePicker = true
@@ -30,6 +27,9 @@ struct HeartRateView: View {
                     .onChange(of: vm.selectedDate){
                         showDatePicker = false
                     }
+                    .presentationBackground(Color("backgroundColor"))
+                    .background(Color("listBackground"))
+                    //.tint(Color("textColor"))
                 }
             
             HStack(alignment: .top){
@@ -44,7 +44,7 @@ struct HeartRateView: View {
                     }.myPickerStyle()
                     // List left
                     ListView(samples: vm.filteredSamples, vm: vm)
-                }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 
                 // Rechts
                 VStack(alignment: .leading){
@@ -71,35 +71,40 @@ struct HeartRateView: View {
                     }
                     //List right
                     ListView(samples: vm.filteredSamplesBPM, vm: vm)
-                }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 
                 
                 
                 
             }
         }.frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color("backgroundColor"))
     }
     
     struct ListView:View {
         var samples:[HeartRateSample]
         var vm:HeartRateViewModel
         var body: some View {
-            List(samples){sample in
-                HStack{
-                    Text(sample.date_time.formatted(
-                        date: .omitted,
-                        time: .shortened
-                    ))
-                    Spacer()
-                    Text("\(sample.bpm) bpm")
-                    
-                    // just for checking if filters are correct
-                    //Spacer()
-                    //Text("\(sample.category)")
-                }
-                
-            }.task { await vm.load()
-            }
+            VStack{
+                List(samples){sample in
+                    HStack{
+                        Text(sample.date_time.formatted(
+                            date: .omitted,
+                            time: .shortened
+                        ))
+                        Spacer()
+                        Text(sample.bpm.formatted())
+                        
+                        // just for checking if filters are correct
+                        //Spacer()
+                        //Text("\(sample.category)")
+                    }
+                    .myListStyle()
+                }.scrollContentBackground(.hidden)
+                .task { await vm.load()}
+                Spacer()
+            }//.frame(maxHeight: 300)
+            
         }
     }
 }
@@ -107,7 +112,15 @@ struct HeartRateView: View {
 extension View{
     func myPickerStyle() -> some View {
         self.pickerStyle(.menu)
-            .tint(Color("pickerFont"))
+            .tint(Color("textColor"))
+    }
+}
+
+extension View{
+    func myListStyle() -> some View{
+        self.listRowBackground(Color("listBackground"))
+            .foregroundStyle(Color("textColor"))
+            
     }
 }
 
