@@ -14,11 +14,11 @@ class HealthService {
             
             let heartRate = HKQuantityType(.heartRate)
 
-            let descriptor = HKSampleQueryDescriptor(
+            let descriptorHeartRate = HKSampleQueryDescriptor(
                 predicates:[.quantitySample(type: heartRate)],
                 sortDescriptors: [SortDescriptor(\.endDate, order: .reverse)])
 
-            let results = try await descriptor.result(for: store)
+            let results = try await descriptorHeartRate.result(for: store)
 
 
             let finalResult = results.map{result in
@@ -50,6 +50,13 @@ class HealthService {
                 HeartRateSample(id: UUID(), date_time: .now, bpm: 70, category: HeartRateCategory.sedentary)
             ]
         }
+    }
+    
+    func fetchRestingHeartRate() async throws -> [HeartRateSample]{
+        
+        return [
+            HeartRateSample(id: UUID(), date_time: .now, bpm: 70, category: HeartRateCategory.sedentary)
+        ]
     }
     
     private func requestPermission() async throws {

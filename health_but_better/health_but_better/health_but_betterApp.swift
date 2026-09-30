@@ -2,8 +2,6 @@
 //  health_but_betterApp.swift
 //  health_but_better
 //
-//  Created by Celine Brun on 09.06.2026.
-//
 
 import SwiftUI
 
